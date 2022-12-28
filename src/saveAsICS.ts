@@ -89,6 +89,14 @@ export function weeksToArray(weeksString: string): number[] {
   }
   // Sort result numerically
   const weekList = Array.from(resultSet.values()).sort((a, b) => +(a > b) - +(a < b));
+  
+  //Skip UOW mid Session Break - temporary fix - not compatiable with UNSW. 
+    for (let i=0;i<weekList.length; i++){
+    if (weekList[i] > 6){
+      weekList[i]= weekList[i]+1;
+    };     
+  }
+  
   return weekList;
 }
 
@@ -133,6 +141,10 @@ export function getRealTime({
   const result = new Date(termStart);
   result.setUTCDate(result.getUTCDate() + 7 * (week - 1) + dayIndex);
   result.setHours(hour);
+  //SetMinutes for half hours. Helpfull for UOW.
+  if (hour % 1 == 0.5){
+  result.setMinutes(30);
+  }
   return result;
 }
 
